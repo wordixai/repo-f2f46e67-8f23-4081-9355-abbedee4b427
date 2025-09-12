@@ -2,17 +2,107 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-The @apply directive should not be used with the group utility class.
-*/
+/* Mobile-first design system with modern gradients and animations */
 
 @layer base {
   :root {
-   
+    /* Mobile App Color Palette */
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 262 83% 58%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222.2 84% 4.9%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96%;
+    --accent-foreground: 222.2 84% 4.9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 262 83% 58%;
+    --radius: 16px;
+    
+    /* Mobile-specific colors */
+    --mobile-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --mobile-accent: 262 83% 58%;
+    --mobile-success: 142 76% 36%;
+    --mobile-warning: 38 92% 50%;
+    --mobile-surface: 0 0% 98%;
+    --mobile-shadow: 0 0% 0% 0.1;
+    
+    /* Status bar safe area */
+    --safe-area-inset-top: env(safe-area-inset-top, 0);
+    --safe-area-inset-bottom: env(safe-area-inset-bottom, 0);
   }
 
   .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 262 83% 58%;
+    --primary-foreground: 222.2 84% 4.9%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 262 83% 58%;
+    
+    --mobile-surface: 217.2 32.6% 17.5%;
+    --mobile-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  }
+}
 
+@layer components {
+  /* Mobile container utilities */
+  .mobile-container {
+    @apply max-w-sm mx-auto relative bg-background min-h-screen overflow-hidden;
+  }
+  
+  .mobile-header {
+    @apply sticky top-0 z-50 w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60;
+    padding-top: var(--safe-area-inset-top);
+  }
+  
+  .mobile-content {
+    @apply flex-1 overflow-auto pb-20;
+    padding-bottom: calc(80px + var(--safe-area-inset-bottom));
+  }
+  
+  .mobile-bottom-nav {
+    @apply fixed bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-sm bg-background/95 backdrop-blur border-t;
+    padding-bottom: var(--safe-area-inset-bottom);
+  }
+  
+  /* Gradient utilities */
+  .gradient-primary {
+    background: var(--mobile-gradient);
+  }
+  
+  .glass-effect {
+    @apply bg-background/80 backdrop-blur-sm border border-white/20;
+  }
+  
+  /* Touch-friendly button styles */
+  .mobile-button {
+    @apply min-h-[44px] min-w-[44px] rounded-xl flex items-center justify-center font-medium transition-all duration-200 active:scale-95;
+  }
+  
+  .mobile-input {
+    @apply h-12 rounded-xl border-2 border-border bg-mobile-surface px-4 text-base focus:border-primary transition-colors;
   }
 }
