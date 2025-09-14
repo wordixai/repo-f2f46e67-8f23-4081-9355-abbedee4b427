@@ -93,6 +93,10 @@
     background: var(--mobile-gradient);
   }
   
+  .bg-gradient-primary {
+    background: var(--mobile-gradient);
+  }
+  
   .glass-effect {
     @apply bg-background/80 backdrop-blur-sm border border-white/20;
   }
@@ -103,6 +107,51 @@
   }
   
   .mobile-input {
-    @apply h-12 rounded-xl border-2 border-border bg-mobile-surface px-4 text-base focus:border-primary transition-colors;
+    @apply h-12 rounded-xl border-2 border-border px-4 text-base focus:border-primary transition-colors;
+    background-color: hsl(var(--mobile-surface));
+  }
+  
+  /* Define mobile surface background */
+  .bg-mobile-surface {
+    background-color: hsl(var(--mobile-surface));
+  }
+  
+  /* Mobile card styles */
+  .mobile-card {
+    @apply rounded-xl border border-border shadow-sm bg-card;
+  }
+}
+
+@layer utilities {
+  /* Hide scrollbar but keep functionality */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Line clamp utilities */
+  .line-clamp-1 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+  }
+  
+  .line-clamp-2 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+  
+  .line-clamp-3 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
   }
 }
