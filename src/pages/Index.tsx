@@ -5,8 +5,11 @@ import { MobileBottomNav } from '@/components/MobileBottomNav';
 import { StoryCarousel } from '@/components/StoryCarousel';
 import { PostCard } from '@/components/PostCard';
 import { ChatList } from '@/components/ChatList';
+import { SearchPage } from '@/pages/SearchPage';
 import { Home, Search, MessageCircle, Heart, User, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { SearchInput } from '@/components/SearchInput';
+import { useSearch } from '@/hooks/useSearch';
 
 const mockPosts = [
   {
@@ -58,6 +61,15 @@ const mockPosts = [
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState('home');
+  const [homeSearchQuery, setHomeSearchQuery] = useState('');
+
+  // Search functionality for home feed
+  const {
+    searchQuery: postsSearchQuery,
+    setSearchQuery: setPostsSearchQuery,
+    filteredItems: filteredPosts,
+    clearSearch: clearPostsSearch
+  } = useSearch(mockPosts, ['caption', 'user']);
 
   const navItems = [
     { 
@@ -94,39 +106,55 @@ const Index = () => {
     },
   ];
 
+  const handleSearchClick = () => {
+    if (activeTab === 'home') {
+      // Show search input for home feed
+      setHomeSearchQuery(homeSearchQuery ? '' : 'show');
+    }
+  };
+
   const renderContent = () => {
     switch (activeTab) {
       case 'home':
         return (
           <div className="mobile-content">
-            <StoryCarousel />
+            {homeSearchQuery && (
+              <div className="p-4 border-b border-border">
+                <SearchInput
+                  value={postsSearchQuery}
+                  onChange={setPostsSearchQuery}
+                  placeholder="Search posts and users..."
+                  autoFocus
+                  onClear={() => {
+                    clearPostsSearch();
+                    setHomeSearchQuery('');
+                  }}
+                />
+              </div>
+            )}
+            
+            {!postsSearchQuery && <StoryCarousel />}
+            
             <div className="space-y-0">
-              {mockPosts.map((post) => (
+              {(postsSearchQuery ? filteredPosts : mockPosts).map((post) => (
                 <PostCard key={post.id} post={post} />
               ))}
             </div>
+            
+            {postsSearchQuery && filteredPosts.length === 0 && (
+              <div className="flex flex-col items-center justify-center py-12 text-center">
+                <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mb-4">
+                  <Search className="h-8 w-8 text-muted-foreground" />
+                </div>
+                <h3 className="text-lg font-semibold mb-2">No posts found</h3>
+                <p className="text-muted-foreground">Try searching for something else</p>
+              </div>
+            )}
           </div>
         );
       
       case 'search':
-        return (
-          <div className="mobile-content p-4">
-            <div className="grid grid-cols-3 gap-1">
-              {Array.from({ length: 12 }, (_, i) => (
-                <div key={i} className="aspect-square bg-muted rounded-lg overflow-hidden">
-                  <img
-                    src={`https://images.unsplash.com/photo-${1500000000000 + i}?w=200&h=200&fit=crop`}
-                    alt={`Explore ${i + 1}`}
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      e.currentTarget.src = `https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=200&h=200&fit=crop`;
-                    }}
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
-        );
+        return <SearchPage />;
       
       case 'messages':
         return (
@@ -211,11 +239,22 @@ const Index = () => {
     }
   };
 
+  // Don't render header for search page as it has its own
+  if (activeTab === 'search') {
+    return (
+      <MobileLayout>
+        <SearchPage />
+        <MobileBottomNav items={navItems} />
+      </MobileLayout>
+    );
+  }
+
   return (
     <MobileLayout>
       <MobileHeader
         title={getHeaderTitle()}
-        showSearch={activeTab === 'home' || activeTab === 'search'}
+        showSearch={activeTab === 'home'}
+        onSearch={handleSearchClick}
         rightAction={
           activeTab === 'messages' ? (
             <Button variant="ghost" size="icon" className="mobile-button w-10 h-10">
